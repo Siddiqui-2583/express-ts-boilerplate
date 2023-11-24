@@ -101,6 +101,11 @@ const studentSchema = new Schema<IStudent>({
     enum: ['active', 'blocked'],
     required: [true, 'isActive is required'],
   },
+  
+  isDeleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // pre save middleware
@@ -118,6 +123,19 @@ studentSchema.pre('save', async function (next) {
 
 studentSchema.post('save', function (doc,next) {
   doc.password = ''
+  next()
+});
+
+
+studentSchema.pre('find', async function (next) {
+  this.find({isDeleted:{$ne: true}})
+
+  next()
+});
+
+studentSchema.pre('aggregate', async function (next) {
+  this.pipeline().unshift({$match:{isDeleted:{$ne: true}}})
+
   next()
 });
 

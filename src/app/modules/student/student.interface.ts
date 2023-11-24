@@ -39,6 +39,7 @@ export interface IStudent {
   localGuardian: LocalGuardian;
   profileImg?: string;
   isActive: 'active' | 'blocked';
+  isDeleted: boolean;
 };
 
 // Static methods
