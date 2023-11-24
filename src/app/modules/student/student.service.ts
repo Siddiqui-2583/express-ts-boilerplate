@@ -1,9 +1,14 @@
-import { Student } from '../student.model';
 import { IStudent } from './student.interface';
+import { Student } from './student.model';
 
-const createStudentIntoDb = async (student: IStudent) => {
-  const result = await Student.create(student);
-  return result;
+const createStudentIntoDb = async (studentData: IStudent) => {
+//   const student = new Student(studentData);
+  if (await Student.isUserExists(studentData.id)) {
+    throw new Error('User already exists!');
+  } else {
+    const result = await Student.create(studentData);
+    return result;
+  }
 };
 
 const getStudentsFromDb = async () => {

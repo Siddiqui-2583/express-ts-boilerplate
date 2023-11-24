@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+import { Model } from "mongoose";
 
 
 export type UserName = {
@@ -37,3 +39,16 @@ export interface IStudent {
   profileImg?: string;
   isActive: 'active' | 'blocked';
 };
+
+// Static methods
+
+export interface StudentModel extends Model<IStudent>{
+  isUserExists(id:string):Promise<IStudent | null>;
+}
+
+// custom instance method
+// export interface StudentMethods{
+//   isUserExists(id:string):Promise<IStudent | null>;
+// }
+
+// export type StudentModel = Model<IStudent, Record<string, never>,StudentMethods>
