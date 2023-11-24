@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
 import {
   Guardian,
@@ -6,6 +7,9 @@ import {
   StudentModel,
   UserName,
 } from './student.interface';
+
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 const userNameSchema = new Schema<UserName>({
   firstName: { type: String, required: [true, 'First name is required'] },
@@ -52,6 +56,11 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 
 const studentSchema = new Schema<IStudent>({
   id: { type: String },
+  password: {
+    type: String,
+    required: [true, 'Password is required.'],
+    maxlength: [20, 'Password can not be more than 20 characters'],
+  },
   name: { type: userNameSchema, required: [true, 'Name is required'] },
   gender: {
     type: String,
@@ -92,6 +101,24 @@ const studentSchema = new Schema<IStudent>({
     enum: ['active', 'blocked'],
     required: [true, 'isActive is required'],
   },
+});
+
+// pre save middleware
+
+studentSchema.pre('save', async function (next) {
+  console.log('Pre save', this);
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds)
+  );
+
+  next()
+});
+
+studentSchema.post('save', function (doc,next) {
+  doc.password = ''
+  next()
 });
 
 // For static methods
