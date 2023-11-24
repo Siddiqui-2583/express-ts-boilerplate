@@ -6,7 +6,7 @@ import StudentValidationSchema from './student.validation';
 const createStudent = async (req: Request, res: Response) => {
   try {
     const { student } = req.body;
-    // console.log({student})
+    console.log({student})
     const zodParsedData = StudentValidationSchema.parse(student);
     // console.log('zodParsedData',zodParsedData)
     const result = await createStudentIntoDb(zodParsedData);

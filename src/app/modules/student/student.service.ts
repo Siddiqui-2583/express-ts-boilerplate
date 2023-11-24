@@ -12,7 +12,7 @@ const createStudentIntoDb = async (studentData: IStudent) => {
 };
 
 const getStudentsFromDb = async () => {
-  const result = await Student.find();
+  const result = await Student.find().select('-password');
   return result;
 };
 const getSingleStudentFromDb = async (id:string) => {
